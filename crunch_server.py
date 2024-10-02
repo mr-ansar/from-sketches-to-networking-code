@@ -1,8 +1,8 @@
 import ansar.connect as ar
 
-from math_api import *
+from crunch_api import *
 
-MATH_API = [
+CRUNCH_API = [
     Multiply,
     Divide,
 ]
@@ -18,7 +18,7 @@ def Server_Start(self, message):         # Start the networking.
     host = self.settings.host
     port = self.settings.port
     ipp = ar.HostPort(host, port)
-    ar.listen(self, ipp, api_server=MATH_API)
+    ar.listen(self, ipp, api_server=CRUNCH_API)
 
 def Server_NotListening(self, message):  # No networking.
     self.complete(message)
@@ -41,7 +41,7 @@ SERVER_DISPATCH = [
     ar.Start,           # Initiate networking.
     ar.NotListening,    # Networking failed.
     ar.Stop,            # Ctrl-c or programmed interrupt.
-    MATH_API,       # Network API.
+    CRUNCH_API,       # Network API.
 ]
 
 ar.bind(Server, SERVER_DISPATCH)
