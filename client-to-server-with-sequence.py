@@ -20,9 +20,9 @@ def Client_Connected(self, message):
     request = settings.request(settings.x, settings.y)
     server_address = self.return_address
 
-    a = self.create(ar.Get, Divide(4.0, 2.0), server_address)
+    a = self.create(ar.GetResponse,Divide(4.0, 2.0), server_address)
     def step_1(value, request, server_address):
-        a = self.create(ar.Get, request, server_address)
+        a = self.create(ar.GetResponse,request, server_address)
         self.assign(a, ar.OnCompleted(step_2))
 
     def step_2(value):

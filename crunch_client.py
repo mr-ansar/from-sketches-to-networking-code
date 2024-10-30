@@ -19,11 +19,12 @@ def Client_Connected(self, message):
     settings = self.settings
     request = settings.request(settings.x, settings.y)
 
-    a = self.create(ar.Get, request, self.return_address)
-    def step_1(response):            # What to do when transaction completes.
+    def completed_1(response):       # What to do when transaction completes.
         self.complete(response)      # Terminate with the response as the output.
 
-    self.assign(a, ar.OnCompleted(step_1))
+    a = self.create(ar.GetResponse, request, self.return_address)
+
+    self.assign(a, ar.OnCompleted(completed_1))
 
 def Client_Completed(self, message):
     d = self.debrief(self.return_address)

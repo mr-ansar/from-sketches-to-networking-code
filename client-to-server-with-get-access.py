@@ -19,7 +19,7 @@ def Client_Connected(self, message):
     settings = self.settings
     request = settings.request(settings.x, settings.y)
 
-    a = self.create(ar.Get, request, self.return_address)
+    a = self.create(ar.GetResponse,request, self.return_address)
     def step_1(value):                  # What to do when transaction completes.
         self.complete(value)            # Terminate with the response as the output.
 

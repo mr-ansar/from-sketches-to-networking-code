@@ -16,19 +16,21 @@ def Client_Start(self, message):         # Start the networking.
     ar.connect(self, ipp, api_client='/', ansar_server=True)
 
 def Client_Connected(self, message):
+    def begin(request, server_address):
+        a = self.create(ar.Concurrently,
+            (Divide(4.0, 2.0), server_address),
+            (request, server_address),
+        )
+        self.then(a, step_1)
+
+    def step_1(response):
+        self.complete(response[1])
+
     settings = self.settings
     request = settings.request(settings.x, settings.y)
+    server_address = self.return_address
 
-    a = self.create(ar.Concurrently,
-        (Divide(4.0, 2.0), self.return_address),
-        (request, self.return_address),
-    )
-    def step_1(response):
-        if isinstance(response, list) and len(response) == 2:
-            self.complete(response[1])
-        self.complete(response)
-
-    self.assign(a, ar.OnCompleted(step_1))
+    begin(request, server_address)
 
 def Client_Completed(self, message):
     d = self.debrief(self.return_address)

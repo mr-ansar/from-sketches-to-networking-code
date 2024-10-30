@@ -15,22 +15,41 @@ def Client_Start(self, message):         # Start the networking.
     ipp = ar.HostPort(host, port)
     ar.connect(self, ipp, api_client='/', ansar_server=True)
 
-def Client_Connected(self, message):
+def Client_Connected_x(self, message):
+    def begin(request, server):
+        a = self.create(ar.GetResponse,Multiply(10.0, 10.0), server)
+        self.then(a, step_1, request, server)
+
+    def step_1(value, request, server):
+        a = self.create(ar.GetResponse,request, server)
+        self.then(a, step_2)
+
+    def step_2(value):
+        self.complete(value)      # Terminate with the response as the output.
+
     settings = self.settings
     request = settings.request(settings.x, settings.y)
-    server_address = self.return_address
+    server = self.return_address
 
-    a = self.create(ar.Get, Divide(4.0, 2.0), server_address)
-    def step_1(response, request, server_address):
-        if not isinstance(response, Output):
-            self.complete(response)
-        a = self.create(ar.Get, request, server_address)
-        self.assign(a, ar.OnCompleted(step_2))
+    begin(request, server)
 
-    def step_2(response):
-        self.complete(response)
+def Client_Connected(self, message):
+    def begin(request, server):
+        a = self.create(ar.Sequentially,
+            (Divide(4.0, 2.0), self.return_address),
+            (request, self.return_address),
+        )
+        self.then(a, step_1)
 
-    self.assign(a, ar.OnCompleted(step_1, request, server_address))
+    def step_1(value):
+        self.complete(value[1])      # Terminate with the response as the output.
+
+    settings = self.settings
+    request = settings.request(settings.x, settings.y)
+    server = self.return_address
+
+    begin(request, server)
+
 def Client_Completed(self, message):
     d = self.debrief(self.return_address)
     if isinstance(d, ar.OnCompleted):
