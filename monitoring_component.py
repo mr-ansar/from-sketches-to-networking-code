@@ -28,6 +28,9 @@ def Component_Start(self, message):
     self.file = ar.File("api-metering", ar.UserDefined(ar.ApiMetering), create_default=True)
     self.metering, _ = self.file.recover()
 
+    # Cant ever stop recovered meterings.
+    self.metering.started.clear()
+
     crunch_ipp = self.settings.crunch
     public_ipp = self.settings.public
     private_ipp = self.settings.private
